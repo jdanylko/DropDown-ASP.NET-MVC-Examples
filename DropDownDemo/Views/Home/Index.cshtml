@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@model DropDownDemo.Models.MonthViewModel
+
+<h3>DropdownList Examples</h3>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <div class="form-group">
+        @Html.Label("Month", "Month:", new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-3">
+            @Html.DropDownListFor(model => model.SelectedMonth,
+                Model.GetMonthSelectList(DateTime.UtcNow.Month),
+                new { @class = "form-control" })
+        </div>
+    </div>
+}
+
+
+
