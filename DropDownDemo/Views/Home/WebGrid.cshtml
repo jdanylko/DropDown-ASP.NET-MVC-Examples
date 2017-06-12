@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "WebGrid Dropdown";
+    var grid = new WebGrid(Model.SelectedVehicles.OrderBy(e=> e.Make), canPage: false);
+}
+@using DropDownDemo.Helpers.Html
+@using DropDownDemo.Models
+@model DropDownDemo.ViewModels.VehicleViewModel
+
+<h3>WebGrid Example</h3>
+
+@using (Html.BeginForm("WebGrid", "Home", FormMethod.Post, new { @class = "vehicle-form form-horizontal" }))
+{
+    <div class="form-group">
+        @Html.Label("Year", "Year:", new { @class = "col-sm-1 control-label" })
+        <div class="col-sm-2">
+            @Html.DropDownListFor(model => model.SelectedYear,
+                Model.GetVehicleYearSelectList(),
+                new { @class = "vehicle-year form-control" })
+        </div>
+    </div>
+
+    @MvcHtmlString.Create(
+        grid.GetHtml(
+            tableStyle: "table table-bordered table-striped table-condensed",
+            htmlAttributes: new {
+                id = "grid"
+            },
+            columns: grid.Columns(
+                grid.Column("Make" , "Make"),
+                grid.Column("Model", "Model"),
+                grid.Column("Rating", format: item => Html.RatingDropDown(item.Value as Vehicle))
+            )).ToHtmlString()
+        )
+}
+
+<script>
+    document.getElementsByClassName('vehicle-year')[0].onchange = function () {
+        document.getElementsByClassName('vehicle-form')[0].submit();
+    };
+</script>
+
+
+

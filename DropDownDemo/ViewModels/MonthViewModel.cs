@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 
-namespace DropDownDemo.Models
+namespace DropDownDemo.ViewModels
 {
     public class MonthViewModel
     {

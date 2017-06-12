@@ -126,11 +126,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Html\HtmlExtensions.cs" />
     <Compile Include="Models\MonthItem.cs" />
-    <Compile Include="Models\MonthViewModel.cs" />
+    <Compile Include="Models\Vehicle.cs" />
+    <Compile Include="Repository\VehicleRepository.cs" />
+    <Compile Include="ViewModels\MonthViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\AdoRepository.cs" />
     <Compile Include="Repository\MonthRepository.cs" />
+    <Compile Include="ViewModels\VehicleViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\DropdownExample.mdf" />
@@ -171,6 +175,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\WebGrid.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
