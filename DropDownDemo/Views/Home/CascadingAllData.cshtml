@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "WebGrid Dropdown";
+}
+@model DropDownDemo.ViewModels.VehicleViewModel
+
+<h3>Cascading All Data Example</h3>
+
+@using (Html.BeginForm("CascadingAllData", "Home", FormMethod.Post, new { @class = "vehicle-form form-horizontal" }))
+{
+    <div class="form-group">
+        @Html.Label("Year", "Year:", new { @class = "col-sm-1 control-label" })
+        <div class="col-sm-2">
+            @Html.DropDownListFor(model => model.SelectedYear,
+                Model.GetVehicleYearSelectList(Model.AllVehicles),
+                new { @class = "vehicle-year form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Make", "Make/Model:", new { @class = "col-sm-1 control-label" })
+        <div class="col-sm-2">
+            @Html.DropDownListFor(model => model.SelectedYear,
+                Model.GetVehicleMakeSelectList(Model.SelectedVehicles, Model.SelectedYear),
+                new { @class = "vehicle-make-model form-control" })
+        </div>
+    </div>
+
+}
+
+<script src="../../Scripts/jquery-3.1.1.min.js"></script>
+<script>
+    $(function() {
+        var vehicles = [
+            @for (var i = 0; i < Model.AllVehicles.Count(); i++)
+            {
+                var vehicle = Model.AllVehicles.ElementAt(i);
+                <text>
+                    { VehicleYear: @vehicle.Year, VehicleMake: "@vehicle.Make", VehicleModel: "@vehicle.Model" }
+                </text>
+                if (i < Model.AllVehicles.Count() - 1)
+                {
+                    @:,
+                }
+            }
+        ];
+
+        $(".vehicle-year").change(
+            function(e) {
+                // Get the year.
+                var year = $(".vehicle-year").val();
+                // get the make and models by year.
+                var filtered = vehicles.filter(auto => auto.VehicleYear.toString() === year);
+                // Empty the current options.
+                var makeModel = $(".vehicle-make-model");
+                $(makeModel).empty();
+                $.each(filtered, function(key,value) {
+                    $(makeModel).append($("<option></option>")
+                        .attr("value", value.VehicleMake+" "+value.VehicleModel)
+                        .text(value.VehicleMake+" "+value.VehicleModel));
+                });
+            });
+    });
+</script>
+
+
+

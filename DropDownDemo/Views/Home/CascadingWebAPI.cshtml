@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "WebGrid Dropdown";
+}
+@model DropDownDemo.ViewModels.VehicleViewModel
+
+<h3>
+    Cascading Dropdown Example w/ WebAPI
+</h3>
+
+@using (Html.BeginForm("CascadingWebAPI", "Home", FormMethod.Post, new { @class = "vehicle-form form-horizontal" }))
+{
+    <div class="form-group">
+        @Html.Label("Year", "Year:", new { @class = "col-sm-1 control-label" })
+        <div class="col-sm-2">
+            @Html.DropDownListFor(model => model.SelectedYear,
+                Model.GetVehicleYearSelectList(Model.AllVehicles),
+                new { @class = "vehicle-year form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Make", "Make/Model:", new { @class = "col-sm-1 control-label" })
+        <div class="col-sm-2">
+            @Html.DropDownListFor(model => model.SelectedYear,
+                Model.GetVehicleMakeSelectList(Model.SelectedVehicles, Model.SelectedYear),
+                new { @class = "vehicle-make-model form-control" })
+        </div>
+    </div>
+
+}
+
+@section scripts
+{
+    <script>
+        $(function() {
+
+            $(".vehicle-year").change(
+                function(e) {
+                    // Get the year.
+                    var year = $(this).val();
+                    var uri = "/api/vehicles/getbyyear/" + year;
+                    $.getJSON(uri)
+                        .done(function(data) {
+                            var makeModel = $(".vehicle-make-model");
+                            $(makeModel).empty();
+                            $.each(data,
+                                function(key, value) {
+                                    $(makeModel).append($("<option></option>")
+                                        .attr("value", value.Make + " " + value.Model)
+                                        .text(value.Make + " " + value.Model));
+                                });
+                        });
+                });
+
+        });
+    </script>
+}
+

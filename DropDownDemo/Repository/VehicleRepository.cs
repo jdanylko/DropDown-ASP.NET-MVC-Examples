@@ -28,6 +28,7 @@ namespace DropDownDemo.Repository
                 return GetRecord(command);
             }
         }
+
         public override Vehicle PopulateRecord(SqlDataReader reader)
         {
             return new Vehicle

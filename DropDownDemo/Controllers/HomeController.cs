@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
 using DropDownDemo.Models;
@@ -34,7 +35,7 @@ namespace DropDownDemo.Controllers
                 AllVehicles = _vehicleRepository.GetAll()
             };
             // Grab the first year.
-            var firstYear = model.GetVehicleYearSelectList().First().Value;
+            var firstYear = model.GetVehicleYearSelectList(model.AllVehicles).First().Value;
             model.SelectedVehicles = model.AllVehicles.Where(e => e.Year.ToString() == firstYear);
 
             return View(model);
@@ -49,6 +50,57 @@ namespace DropDownDemo.Controllers
             return View(model);
         }
 
+        public ActionResult CascadingAllData()
+        {
+            var model = new VehicleViewModel
+            {
+                AllVehicles = _vehicleRepository.GetAll()
+            };
+
+            var firstYear = model.GetVehicleYearSelectList(model.AllVehicles).First().Value;
+            model.SelectedVehicles = model.AllVehicles.Where(e => e.Year.ToString() == firstYear);
+            model.SelectedYear = int.Parse(firstYear);
+
+            return View(model);
+        }
+
+
+        public ActionResult CascadingSignalR()
+        {
+            var model = new VehicleViewModel
+            {
+                AllVehicles = _vehicleRepository.GetAll()
+            };
+
+            var firstYear = model.GetVehicleYearSelectList(model.AllVehicles).First().Value;
+            model.SelectedVehicles = model.AllVehicles.Where(e => e.Year.ToString() == firstYear);
+            model.SelectedYear = int.Parse(firstYear);
+
+            return View(model);
+        }
+
+        public ActionResult CascadingWebAPI()
+        {
+            var model = new VehicleViewModel
+            {
+                AllVehicles = _vehicleRepository.GetAll()
+            };
+
+            var firstYear = model.GetVehicleYearSelectList(model.AllVehicles).First().Value;
+            model.SelectedVehicles = model.AllVehicles.Where(e => e.Year.ToString() == firstYear);
+            model.SelectedYear = int.Parse(firstYear);
+
+            return View(model);
+        }
+
+        //public JsonResult GetVehiclesJson(string id)
+        //{
+        //    var records = _vehicleRepository.GetAll().Where(e => e.Year.ToString() == id);
+        //    var result = records
+        //        .Select(e => new Vehicle {Make = e.Make, Model = e.Model})
+        //        .ToList();
+        //    return Json(result, JsonRequestBehavior.AllowGet);
+        //}
 
 
 

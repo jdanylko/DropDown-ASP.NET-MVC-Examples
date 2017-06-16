@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "Cascading Dropdown w/ SignalR";
+}
+@model DropDownDemo.ViewModels.VehicleViewModel
+
+<h3>Cascading Dropdown w/ SignalR Example</h3>
+
+@using (Html.BeginForm("CascadingSignalR", "Home", FormMethod.Post, 
+    new { @class = "vehicle-form form-horizontal" }))
+{
+    <div class="form-group">
+        @Html.Label("Year", "Year:", new { @class = "col-sm-1 control-label" })
+        <div class="col-sm-2">
+            @Html.DropDownListFor(model => model.SelectedYear,
+                Model.GetVehicleYearSelectList(Model.AllVehicles),
+                new { @class = "vehicle-year form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Make", "Make/Model:", new { @class = "col-sm-1 control-label" })
+        <div class="col-sm-2">
+            @Html.DropDownListFor(model => model.SelectedYear,
+                Model.GetVehicleMakeSelectList(Model.SelectedVehicles, Model.SelectedYear),
+                new { @class = "vehicle-make-model form-control" })
+        </div>
+    </div>
+
+}
+
+@section scripts
+{
+    <script src="../../Scripts/jquery.signalR-2.2.2.min.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script>
+        $(function() {
+
+            var aHub = $.connection.autoHub;
+
+            aHub.client.updateMakeModel = function (makeModels) {
+                // Empty the current options.
+                var makeModel = $(".vehicle-make-model");
+                $(makeModel).empty();
+                $.each(makeModels, function (key, value) {
+                    $(makeModel).append($("<option></option>")
+                        .attr("value", value.Make + " " + value.Model)
+                        .text(value.Make + " " + value.Model));
+                });
+            };
+
+            $(".vehicle-year").change(
+                function(e) {
+                    // Get the year.
+                    var year = $(this).val();
+                    aHub.server.getAutosByYear(year);
+                });
+
+            $.connection.hub.start()
+                .done(function () {
+                    console.log('Now connected, connection ID='
+                        + $.connection.hub.id);
+                })
+                .fail(function() {
+                    console.log('Could not Connect!');
+                });
+        });
+    </script>
+}
+
