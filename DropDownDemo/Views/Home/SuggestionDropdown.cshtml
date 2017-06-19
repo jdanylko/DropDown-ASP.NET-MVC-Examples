@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "Suggestion Dropdown";
+}
+<h3>Suggestion Dropdown</h3>
+
+<style>
+    .suggestions {
+        border: 1px solid #CCC;
+        background-color: #FFF;
+    }
+
+    .suggest-list li a { padding: 2px 5px; display: block}
+
+    .suggest-list li.active { background-color: #CCC }
+
+</style>
+
+@using (Html.BeginForm("SuggestionDropdown", "Home", FormMethod.Post, new { @class = "suggestion-dropdown form-horizontal" }))
+{
+    <div class="form-group">
+        @Html.Label("SearchLabel", "Search", new { @class = "col-sm-1 control-label" })
+        <div class="col-sm-2">
+            @Html.TextBox("SearchTerm", string.Empty, new { @class = "search-term form-control" })
+            <div class="suggestions hidden">
+                <ul class="suggest-list list-unstyled" />
+            </div>
+        </div>
+    </div>
+
+}
+
+@section scripts
+{
+    <script>
+        $(function() {
+
+            $("#SearchTerm").on("keyup keypress",
+                function(e) {
+                    var active = $("li.active", ".suggest-list");
+                    if (e.which === 27) {
+                        $(".suggestions").addClass("hidden");
+                    } else if (e.which === 40) {
+                        if (active.length > 0) {
+                            var next = $(active).next();
+                            $(active).removeClass("active");
+                            $(next).addClass("active");
+                        } else {
+                            $("li:first", ".suggest-list").addClass("active");
+                        }
+                    } else if (e.which === 38) {
+                        if (active.length > 0) {
+                            var previous = $(active).prev();
+                            $(active).removeClass("active");
+                            $(previous).addClass("active");
+                        } else {
+                            $("li:last", ".suggest-list").addClass("active");
+                        }
+                    } else if (e.which === 13) {
+                        e.preventDefault();
+                        $(this).val($(active).text());
+                        $(".suggestions").addClass("hidden");
+                        return false;
+                    } else {
+                        // We have a good value w/ no special keys.
+                        var value = $("#SearchTerm").val();
+                        if (value === "") {
+                            $(".suggestions").addClass("hidden");
+                        } else {
+                            var uri = "/api/search/for/" + value;
+                            $(".suggestions").removeClass("hidden");
+                            $.getJSON(uri)
+                                .done(function (data) {
+                                    var list = $(".suggest-list");
+                                    $(list).empty();
+                                    $.each(data,
+                                        function (key, value) {
+                                            var anchor = "<a href='#'>" +
+                                                value.Make +
+                                                " " +
+                                                value.Model +
+                                                "</a>";
+                                            $(list).append($("<li></li>")
+                                                .html(anchor));
+                                            // On mouse click, set the value.
+                                            $("a", list).on("click",
+                                                function (e) {
+                                                    e.preventDefault();
+                                                    var selected = $(this).text();
+                                                    $(".search-term").val(selected);
+                                                    $(".suggestions").addClass("hidden");
+                                                });
+                                        });
+                                });
+                        }
+                    }
+                });
+        });
+
+    </script>
+}

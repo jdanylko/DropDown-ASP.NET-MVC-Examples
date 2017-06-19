@@ -93,14 +93,10 @@ namespace DropDownDemo.Controllers
             return View(model);
         }
 
-        //public JsonResult GetVehiclesJson(string id)
-        //{
-        //    var records = _vehicleRepository.GetAll().Where(e => e.Year.ToString() == id);
-        //    var result = records
-        //        .Select(e => new Vehicle {Make = e.Make, Model = e.Model})
-        //        .ToList();
-        //    return Json(result, JsonRequestBehavior.AllowGet);
-        //}
+        public ActionResult SuggestionDropdown()
+        {
+            return View();
+        }
 
 
 

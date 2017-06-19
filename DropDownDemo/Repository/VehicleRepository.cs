@@ -29,6 +29,16 @@ namespace DropDownDemo.Repository
             }
         }
 
+        public IEnumerable<Vehicle> Search(string substring)
+        {
+            using (var command = new 
+                SqlCommand("SELECT Id, Year, Make, Model FROM VehicleModelYear WHERE CHARINDEX(@partialStr, Make+' '+Model) > 0"))
+            {
+                command.Parameters.Add(new SqlParameter("partialStr", substring));
+                return GetRecords(command);
+            }
+        }
+
         public override Vehicle PopulateRecord(SqlDataReader reader)
         {
             return new Vehicle
