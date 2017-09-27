@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "Grid in a Dropdown";
+}
+<h3>Grid in a Dropdown</h3>
+
+<style>
+    .suggestions {
+        border: 1px solid #CCC;
+        background-color: #FFF;
+        width: 300px;
+        z-index: 1;
+        position: absolute;
+        top: 30px;
+        left: 15px
+        
+    }
+    
+    .suggest-grid tr.active td { background-color: #777 !important; color: #FFF }
+
+</style>
+
+@using (Html.BeginForm("GridDropdown", "Home", FormMethod.Post, new { @class = "suggestion-dropdown form-horizontal" }))
+{
+    <div class="form-group">
+        @Html.Label("SearchLabel", "Cars: ", new { @class = "col-sm-1 control-label" })
+        <div class="col-sm-4">
+            @Html.TextBox("SearchTerm", string.Empty, new { @class = "search-term form-control" })
+            <div class="suggestions hidden">
+                <table class="table table-condensed table-striped suggest-grid">
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    <script>
+        $(function() {
+
+            var getSelectedValue = function() {
+                var activeRow = $("tr.active");
+                var firstColumn = $("td:nth-child(1)", activeRow).text();
+                var secondColumn = $("td:nth-child(2)", activeRow).text();
+                var entry = firstColumn + " (" + secondColumn + ")";
+                return entry;
+            }
+
+            $("#SearchTerm")
+                .on("focusout", function(e) {
+                    $(".suggestions").addClass("hidden");
+                })
+                .on("keyup keypress",
+                function(e) {
+                    var active = $("tr.active", ".suggest-grid");
+                    if (e.which === 27) {
+                        $(".suggestions").addClass("hidden");
+                    } else if (e.which === 40) {
+                        if (active.length > 0) {
+                            var next = $(active).next();
+                            $(active).removeClass("active");
+                            $(next).addClass("active");
+                        } else {
+                            $("tr:first", ".suggest-grid").addClass("active");
+                        }
+                    } else if (e.which === 38) {
+                        if (active.length > 0) {
+                            var previous = $(active).prev();
+                            $(active).removeClass("active");
+                            $(previous).addClass("active");
+                        } else {
+                            $("tr:last", ".suggest-grid").addClass("active");
+                        }
+                    } else if (e.which === 13) {
+                        e.preventDefault();
+                        var selectedValue = getSelectedValue();
+                        $(this).val(selectedValue);
+                        $(".suggestions").addClass("hidden");
+                        return false;
+                    } else {
+                        // We have a good value w/ no special keys.
+                        var value = $("#SearchTerm").val();
+                        if (value === "") {
+                            $(".suggestions").addClass("hidden");
+                        } else {
+                            var uri = "/api/search/for/" + value;
+
+                            $(".suggestions").removeClass("hidden");
+
+                            $.getJSON(uri)
+                                .done(function (data) {
+                                    var grid = $(".suggest-grid");
+                                    $("tbody", grid).empty();
+                                    $.each(data,
+                                        function (key, value) {
+                                            var row =
+                                                "<td>" + value.Make + "</td>" +
+                                                "<td>" + value.Model + "</td>";
+                                            $("tbody", grid).append($("<tr></tr>").html(row));
+                                            // On mouse click, set the value.
+
+                                            $("tr", grid).on("click",
+                                                function (e) {
+                                                    e.preventDefault();
+                                                    // this = the row (tr)
+                                                    // Grabs the first column's value.
+                                                    var selectedValue = getSelectedValue();
+                                                    $(".search-term").val(selectedValue);
+                                                    $(".suggestions").addClass("hidden");
+                                                });
+                                        });
+                                });
+                        }
+                    }
+                });
+        });
+
+    </script>
+}

@@ -238,6 +238,7 @@
     <Content Include="Views\Home\CascadingSignalR.cshtml" />
     <Content Include="Views\Home\CascadingWebAPI.cshtml" />
     <Content Include="Views\Home\SuggestionDropdown.cshtml" />
+    <Content Include="Views\Home\GridDropdown.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
