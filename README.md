@@ -10,3 +10,5 @@ This collection of posts shows how easy it is to use dropdowns in ASP.NET MVC.
 * <a href="https://www.danylkoweb.com/Blog/using-dropdowns-in-grids-JX">Dropdowns in WebGrids</a>
 * <a href="https://www.danylkoweb.com/Blog/cascading-dropdowns-in-aspnet-mvc-JY">Cascading Dropdowns</a>
 * <a href="https://www.danylkoweb.com/Blog/creating-a-suggestion-dropdown-K1">Creating a Suggestion Dropdown</a>
+* -NEW- <a href="https://www.danylkoweb.com/Blog/creating-a-multi-column-dropdown-in-aspnet-mvc-L2">Creating a Multi-Column Dropdown</a>
+
